@@ -14,6 +14,8 @@ import com.drewmiley.eraserhead.R;
 
 public class PoolTableView extends View {
 
+    private static final double POOL_TABLE_HEIGHT_WIDTH_RATIO = 1.75;
+
     private int baizeColor;
     private int cushionColor;
     private int lineColor;
@@ -79,12 +81,28 @@ public class PoolTableView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int contentWidth = getMeasuredWidth() - paddingLeft - paddingRight;
-        int contentHeight = getMeasuredHeight() - paddingTop - paddingBottom;
+        drawTableCushions(canvas);
+    }
+
+    private void drawTableCushions(Canvas canvas) {
+        double contentWidth = getMeasuredWidth() - paddingLeft - paddingRight;
+        double contentHeight = getMeasuredHeight() - paddingTop - paddingBottom;
+
+        double poolTableWidth = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
+                contentWidth :
+                contentHeight / POOL_TABLE_HEIGHT_WIDTH_RATIO;
+        double poolTableHeight = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
+                contentWidth * POOL_TABLE_HEIGHT_WIDTH_RATIO :
+                contentHeight;
 
         Paint paint = new Paint();
         paint.setColor(cushionColor);
 
-        canvas.drawRect(0, 0, contentWidth, contentHeight, paint);
+        float left = (float) (contentWidth - poolTableWidth) / 2;
+        float top = (float) (contentHeight - poolTableHeight) / 2;
+        float right = (float) (contentWidth + poolTableWidth) / 2;
+        float bottom = (float) (contentHeight + poolTableHeight) / 2;
+
+        canvas.drawRect(left, top, right, bottom, paint);
     }
 }
