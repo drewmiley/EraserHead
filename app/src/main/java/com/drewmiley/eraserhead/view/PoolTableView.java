@@ -82,6 +82,7 @@ public class PoolTableView extends View {
         super.onDraw(canvas);
 
         drawTableCushions(canvas);
+        drawTableBaize(canvas);
     }
 
     private void drawTableCushions(Canvas canvas) {
@@ -102,6 +103,28 @@ public class PoolTableView extends View {
         float top = (float) (contentHeight - poolTableHeight) / 2;
         float right = (float) (contentWidth + poolTableWidth) / 2;
         float bottom = (float) (contentHeight + poolTableHeight) / 2;
+
+        canvas.drawRect(left, top, right, bottom, paint);
+    }
+
+    private void drawTableBaize(Canvas canvas) {
+        double contentWidth = getMeasuredWidth() - paddingLeft - paddingRight;
+        double contentHeight = getMeasuredHeight() - paddingTop - paddingBottom;
+
+        double poolTableWidth = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
+                contentWidth :
+                contentHeight / POOL_TABLE_HEIGHT_WIDTH_RATIO;
+        double poolTableHeight = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
+                contentWidth * POOL_TABLE_HEIGHT_WIDTH_RATIO :
+                contentHeight;
+
+        Paint paint = new Paint();
+        paint.setColor(baizeColor);
+
+        float left = (float) (contentWidth - poolTableWidth + poolTableWidth / 8) / 2;
+        float top = (float) (contentHeight - poolTableHeight + poolTableHeight / 14) / 2;
+        float right = (float) (contentWidth + poolTableWidth - poolTableWidth / 8) / 2;
+        float bottom = (float) (contentHeight + poolTableHeight - poolTableHeight / 14) / 2;
 
         canvas.drawRect(left, top, right, bottom, paint);
     }
