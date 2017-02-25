@@ -19,19 +19,39 @@ public class PoolTableView extends View {
     private int lineColor;
     private int pocketColor;
 
+    private final int paddingLeft;
+    private final int paddingTop;
+    private final int paddingRight;
+    private final int paddingBottom;
+
     public PoolTableView(Context context) {
         super(context);
         init(null, 0);
+
+        paddingLeft = getPaddingLeft();
+        paddingTop = getPaddingTop();
+        paddingRight = getPaddingRight();
+        paddingBottom = getPaddingBottom();
     }
 
     public PoolTableView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs, 0);
+
+        paddingLeft = getPaddingLeft();
+        paddingTop = getPaddingTop();
+        paddingRight = getPaddingRight();
+        paddingBottom = getPaddingBottom();
     }
 
     public PoolTableView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs, defStyle);
+
+        paddingLeft = getPaddingLeft();
+        paddingTop = getPaddingTop();
+        paddingRight = getPaddingRight();
+        paddingBottom = getPaddingBottom();
     }
 
     private void init(AttributeSet attrs, int defStyle) {
@@ -58,13 +78,6 @@ public class PoolTableView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        // TODO: consider storing these as member variables to reduce
-        // allocations per draw cycle.
-        int paddingLeft = getPaddingLeft();
-        int paddingTop = getPaddingTop();
-        int paddingRight = getPaddingRight();
-        int paddingBottom = getPaddingBottom();
 
         int contentWidth = getMeasuredWidth() - paddingLeft - paddingRight;
         int contentHeight = getMeasuredHeight() - paddingTop - paddingBottom;
