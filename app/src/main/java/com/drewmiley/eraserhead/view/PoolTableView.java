@@ -83,6 +83,7 @@ public class PoolTableView extends View {
 
         drawTableCushions(canvas);
         drawTableBaize(canvas);
+        drawTablePockets(canvas);
     }
 
     private void drawTableCushions(Canvas canvas) {
@@ -127,5 +128,34 @@ public class PoolTableView extends View {
         float bottom = (float) (contentHeight + poolTableHeight - poolTableHeight / 14) / 2;
 
         canvas.drawRect(left, top, right, bottom, paint);
+    }
+
+    private void drawTablePockets(Canvas canvas) {
+        double contentWidth = getMeasuredWidth() - paddingLeft - paddingRight;
+        double contentHeight = getMeasuredHeight() - paddingTop - paddingBottom;
+
+        double poolTableWidth = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
+                contentWidth :
+                contentHeight / POOL_TABLE_HEIGHT_WIDTH_RATIO;
+        double poolTableHeight = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
+                contentWidth * POOL_TABLE_HEIGHT_WIDTH_RATIO :
+                contentHeight;
+
+        Paint paint = new Paint();
+        paint.setColor(pocketColor);
+
+        float left = (float) (contentWidth - poolTableWidth + poolTableWidth / 8) / 2;
+        float top = (float) (contentHeight - poolTableHeight + poolTableHeight / 14) / 2;
+        float right = (float) (contentWidth + poolTableWidth - poolTableWidth / 8) / 2;
+        float bottom = (float) (contentHeight + poolTableHeight - poolTableHeight / 14) / 2;
+
+        float rad = (float) poolTableWidth / 20;
+
+        canvas.drawCircle(left, top, rad, paint);
+        canvas.drawCircle(right, top, rad, paint);
+        canvas.drawCircle(left, (top + bottom) / 2, rad, paint);
+        canvas.drawCircle(right, (top + bottom) / 2, rad, paint);
+        canvas.drawCircle(left, bottom, rad, paint);
+        canvas.drawCircle(right, bottom, rad, paint);
     }
 }
