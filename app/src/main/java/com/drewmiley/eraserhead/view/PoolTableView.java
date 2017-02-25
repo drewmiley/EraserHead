@@ -14,46 +14,37 @@ import com.drewmiley.eraserhead.R;
 
 public class PoolTableView extends View {
 
-    private static final double POOL_TABLE_HEIGHT_WIDTH_RATIO = 1.75;
+    private final double POOL_TABLE_OUTLINE_HEIGHT_UNIT_MULTIPLIER = 7;
+    private final double POOL_TABLE_OUTLINE_WIDTH_UNIT_MULTIPLIER = 4;
+    private final double POOL_TABLE_BAIZE_HEIGHT_UNIT_MULTIPLIER = 6;
+    private final double POOL_TABLE_BAIZE_WIDTH_UNIT_MULTIPLIER = 3;
+    private final double POOL_TABLE_POCKET_RADIUS_UNIT_MULTIPLIER = 0.2;
+    private final double POOL_TABLE_LINE_RADIUS_UNIT_MULTIPIER = 0.05;
+    private final double POOL_TABLE_LINE_BAULK_LINE_RATIO = 0.2;
+    private final double POOL_TABLE_LINE_BLACK_SPOT_RATIO = 0.2;
 
     private int baizeColor;
     private int cushionColor;
     private int lineColor;
     private int pocketColor;
 
-    private final int paddingLeft;
-    private final int paddingTop;
-    private final int paddingRight;
-    private final int paddingBottom;
+    private double contentHeight;
+    private double contentWidth;
+    private float poolTableUnit;
 
     public PoolTableView(Context context) {
         super(context);
         init(null, 0);
-
-        paddingLeft = getPaddingLeft();
-        paddingTop = getPaddingTop();
-        paddingRight = getPaddingRight();
-        paddingBottom = getPaddingBottom();
     }
 
     public PoolTableView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs, 0);
-
-        paddingLeft = getPaddingLeft();
-        paddingTop = getPaddingTop();
-        paddingRight = getPaddingRight();
-        paddingBottom = getPaddingBottom();
     }
 
     public PoolTableView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs, defStyle);
-
-        paddingLeft = getPaddingLeft();
-        paddingTop = getPaddingTop();
-        paddingRight = getPaddingRight();
-        paddingBottom = getPaddingBottom();
     }
 
     private void init(AttributeSet attrs, int defStyle) {
@@ -81,76 +72,66 @@ public class PoolTableView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        contentHeight = getMeasuredHeight() - getPaddingTop() - getPaddingBottom();
+        contentWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
+        poolTableUnit = calculatePoolTableUnit();
+
         drawTableCushions(canvas);
         drawTableBaize(canvas);
         drawTablePockets(canvas);
         drawTableLines(canvas);
     }
 
-    private void drawTableCushions(Canvas canvas) {
-        double contentWidth = getMeasuredWidth() - paddingLeft - paddingRight;
-        double contentHeight = getMeasuredHeight() - paddingTop - paddingBottom;
+    private float calculatePoolTableUnit() {
+        double poolTableUnit = contentHeight * POOL_TABLE_OUTLINE_WIDTH_UNIT_MULTIPLIER > contentWidth * POOL_TABLE_OUTLINE_HEIGHT_UNIT_MULTIPLIER ?
+                contentWidth / POOL_TABLE_OUTLINE_WIDTH_UNIT_MULTIPLIER :
+                contentHeight / POOL_TABLE_OUTLINE_HEIGHT_UNIT_MULTIPLIER;
+        return (float) poolTableUnit;
+    }
 
-        double poolTableWidth = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
-                contentWidth :
-                contentHeight / POOL_TABLE_HEIGHT_WIDTH_RATIO;
-        double poolTableHeight = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
-                contentWidth * POOL_TABLE_HEIGHT_WIDTH_RATIO :
-                contentHeight;
+    private void drawTableCushions(Canvas canvas) {
+        double poolTableCushionsWidth = poolTableUnit * POOL_TABLE_OUTLINE_WIDTH_UNIT_MULTIPLIER;
+        double poolTableCushionsHeight = poolTableUnit * POOL_TABLE_OUTLINE_HEIGHT_UNIT_MULTIPLIER;
 
         Paint paint = new Paint();
         paint.setColor(cushionColor);
 
-        float left = (float) (contentWidth - poolTableWidth) / 2;
-        float top = (float) (contentHeight - poolTableHeight) / 2;
-        float right = (float) (contentWidth + poolTableWidth) / 2;
-        float bottom = (float) (contentHeight + poolTableHeight) / 2;
+        float left = (float) (contentWidth - poolTableCushionsWidth) / 2;
+        float top = (float) (contentHeight - poolTableCushionsHeight) / 2;
+        float right = (float) (contentWidth + poolTableCushionsWidth) / 2;
+        float bottom = (float) (contentHeight + poolTableCushionsHeight) / 2;
 
         canvas.drawRect(left, top, right, bottom, paint);
     }
 
     private void drawTableBaize(Canvas canvas) {
-        double contentWidth = getMeasuredWidth() - paddingLeft - paddingRight;
-        double contentHeight = getMeasuredHeight() - paddingTop - paddingBottom;
-
-        double poolTableWidth = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
-                contentWidth :
-                contentHeight / POOL_TABLE_HEIGHT_WIDTH_RATIO;
-        double poolTableHeight = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
-                contentWidth * POOL_TABLE_HEIGHT_WIDTH_RATIO :
-                contentHeight;
+        double poolTableBaizeWidth = poolTableUnit * POOL_TABLE_BAIZE_WIDTH_UNIT_MULTIPLIER;
+        double poolTableBaizeHeight = poolTableUnit * POOL_TABLE_BAIZE_HEIGHT_UNIT_MULTIPLIER;
 
         Paint paint = new Paint();
         paint.setColor(baizeColor);
 
-        float left = (float) (contentWidth - poolTableWidth + poolTableWidth / 8) / 2;
-        float top = (float) (contentHeight - poolTableHeight + poolTableHeight / 14) / 2;
-        float right = (float) (contentWidth + poolTableWidth - poolTableWidth / 8) / 2;
-        float bottom = (float) (contentHeight + poolTableHeight - poolTableHeight / 14) / 2;
+        float left = (float) (contentWidth - poolTableBaizeWidth) / 2;
+        float top = (float) (contentHeight - poolTableBaizeHeight) / 2;
+        float right = (float) (contentWidth + poolTableBaizeWidth) / 2;
+        float bottom = (float) (contentHeight + poolTableBaizeHeight) / 2;
 
         canvas.drawRect(left, top, right, bottom, paint);
     }
 
     private void drawTablePockets(Canvas canvas) {
-        double contentWidth = getMeasuredWidth() - paddingLeft - paddingRight;
-        double contentHeight = getMeasuredHeight() - paddingTop - paddingBottom;
-
-        double poolTableWidth = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
-                contentWidth :
-                contentHeight / POOL_TABLE_HEIGHT_WIDTH_RATIO;
-        double poolTableHeight = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
-                contentWidth * POOL_TABLE_HEIGHT_WIDTH_RATIO :
-                contentHeight;
+        double poolTableBaizeWidth = poolTableUnit * POOL_TABLE_BAIZE_WIDTH_UNIT_MULTIPLIER;
+        double poolTableBaizeHeight = poolTableUnit * POOL_TABLE_BAIZE_HEIGHT_UNIT_MULTIPLIER;
 
         Paint paint = new Paint();
         paint.setColor(pocketColor);
 
-        float left = (float) (contentWidth - poolTableWidth + poolTableWidth / 8) / 2;
-        float top = (float) (contentHeight - poolTableHeight + poolTableHeight / 14) / 2;
-        float right = (float) (contentWidth + poolTableWidth - poolTableWidth / 8) / 2;
-        float bottom = (float) (contentHeight + poolTableHeight - poolTableHeight / 14) / 2;
+        float left = (float) (contentWidth - poolTableBaizeWidth) / 2;
+        float top = (float) (contentHeight - poolTableBaizeHeight) / 2;
+        float right = (float) (contentWidth + poolTableBaizeWidth) / 2;
+        float bottom = (float) (contentHeight + poolTableBaizeHeight) / 2;
 
-        float rad = (float) poolTableWidth / 20;
+        float rad = (float) (poolTableUnit * POOL_TABLE_POCKET_RADIUS_UNIT_MULTIPLIER);
 
         canvas.drawCircle(left, top, rad, paint);
         canvas.drawCircle(right, top, rad, paint);
@@ -161,27 +142,24 @@ public class PoolTableView extends View {
     }
 
     private void drawTableLines(Canvas canvas) {
-        double contentWidth = getMeasuredWidth() - paddingLeft - paddingRight;
-        double contentHeight = getMeasuredHeight() - paddingTop - paddingBottom;
-
-        double poolTableWidth = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
-                contentWidth :
-                contentHeight / POOL_TABLE_HEIGHT_WIDTH_RATIO;
-        double poolTableHeight = contentHeight / contentWidth > POOL_TABLE_HEIGHT_WIDTH_RATIO ?
-                contentWidth * POOL_TABLE_HEIGHT_WIDTH_RATIO :
-                contentHeight;
+        double poolTableBaizeWidth = poolTableUnit * POOL_TABLE_BAIZE_WIDTH_UNIT_MULTIPLIER;
+        double poolTableBaizeHeight = poolTableUnit * POOL_TABLE_BAIZE_HEIGHT_UNIT_MULTIPLIER;
 
         Paint paint = new Paint();
         paint.setColor(lineColor);
 
-        float left = (float) (contentWidth - poolTableWidth + poolTableWidth / 8) / 2;
-        float top = (float) (contentHeight - poolTableHeight + poolTableHeight / 14) / 2;
-        float right = (float) (contentWidth + poolTableWidth - poolTableWidth / 8) / 2;
-        float bottom = (float) (contentHeight + poolTableHeight - poolTableHeight / 14) / 2;
+        float left = (float) (contentWidth - poolTableBaizeWidth) / 2;
+        float top = (float) (contentHeight - poolTableBaizeHeight) / 2;
+        float right = (float) (contentWidth + poolTableBaizeWidth) / 2;
+        float bottom = (float) (contentHeight + poolTableBaizeHeight) / 2;
 
-        float rad = (float) poolTableWidth / 100;
+        float rad = (float) (poolTableUnit * POOL_TABLE_LINE_RADIUS_UNIT_MULTIPIER);
 
-        canvas.drawCircle((left + right) / 2, (top + 4 * bottom) / 5, rad, paint);
-        canvas.drawRect(left, (4 * top + bottom) / 5 - rad / 2, right, (4 * top + bottom) / 5 + rad / 2, paint);
+        canvas.drawRect(left,
+                (float) ((1 - POOL_TABLE_LINE_BAULK_LINE_RATIO) * top + POOL_TABLE_LINE_BAULK_LINE_RATIO * bottom - rad / 2),
+                right,
+                (float) ((1 - POOL_TABLE_LINE_BAULK_LINE_RATIO) * top + POOL_TABLE_LINE_BAULK_LINE_RATIO * bottom + rad / 2),
+                paint);
+        canvas.drawCircle((left + right) / 2, (float) (POOL_TABLE_LINE_BLACK_SPOT_RATIO * top + (1 - POOL_TABLE_LINE_BLACK_SPOT_RATIO) * bottom), rad, paint);
     }
 }
