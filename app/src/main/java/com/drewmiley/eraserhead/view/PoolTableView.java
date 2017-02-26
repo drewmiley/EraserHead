@@ -35,6 +35,8 @@ public class PoolTableView extends View {
     private double contentWidth;
     private float poolTableUnit;
 
+    private WhiteBall whiteBall;
+
     public PoolTableView(Context context) {
         super(context);
         init(context, null, 0);
@@ -73,43 +75,47 @@ public class PoolTableView extends View {
         a.recycle();
     }
 
+    private float calculatePoolTableUnit() {
+        double poolTableUnit = contentHeight * POOL_TABLE_OUTLINE_WIDTH_UNIT_MULTIPLIER > contentWidth * POOL_TABLE_OUTLINE_HEIGHT_UNIT_MULTIPLIER ?
+                contentWidth / POOL_TABLE_OUTLINE_WIDTH_UNIT_MULTIPLIER :
+                contentHeight / POOL_TABLE_OUTLINE_HEIGHT_UNIT_MULTIPLIER;
+        return (float) poolTableUnit;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
+        // If the cell is double tapped raise the event
+        if (doubleTapDetector.onTouchEvent(motionEvent)) {
+            onDoubleTap(motionEvent.getX(), motionEvent.getY());
+            return true;
+        }
+
         int action = motionEvent.getAction();
         if (action == MotionEvent.ACTION_DOWN){
             onTouch(motionEvent.getX(), motionEvent.getY());
-        }
-        if (action == MotionEvent.ACTION_MOVE) {
+        } else if (action == MotionEvent.ACTION_MOVE) {
             onDrag(motionEvent.getX(), motionEvent.getY());
-        }
-
-        // Whether this event represents a double-tap
-        boolean doubleTapped = doubleTapDetector.onTouchEvent(motionEvent);
-
-        // If the cell is double tapped raise the event
-        if(doubleTapped) {
-            onDoubleTap(motionEvent.getX(), motionEvent.getY());
         }
 
         return true;
     }
 
     private void onTouch(float x, float y) {
-        System.out.println("Touch");
-        System.out.println(x);
-        System.out.println(y);
+        whiteBall.setX(x);
+        whiteBall.setY(y);
+        invalidate();
     }
 
     private void onDrag(float x, float y) {
-        System.out.println("Drag");
-        System.out.println(x);
-        System.out.println(y);
+        whiteBall.setX(x);
+        whiteBall.setY(y);
+        invalidate();
     }
 
     private void onDoubleTap(float x, float y) {
-        System.out.println("DoubleTap");
-        System.out.println(x);
-        System.out.println(y);
+        whiteBall.setX(x + 50);
+        whiteBall.setY(y + 50);
+        invalidate();
     }
 
     @Override
@@ -120,19 +126,16 @@ public class PoolTableView extends View {
         contentWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
         poolTableUnit = calculatePoolTableUnit();
 
+        if (whiteBall == null) {
+            whiteBall = new WhiteBall((float) contentWidth / 2, (float) contentHeight / 2, poolTableUnit);
+        }
+
         drawTableCushions(canvas);
         drawTableBaize(canvas);
         drawTablePockets(canvas);
         drawTableLines(canvas);
 
-        drawWhiteBall(canvas, (float) contentWidth / 2, (float) contentHeight / 2);
-    }
-
-    private float calculatePoolTableUnit() {
-        double poolTableUnit = contentHeight * POOL_TABLE_OUTLINE_WIDTH_UNIT_MULTIPLIER > contentWidth * POOL_TABLE_OUTLINE_HEIGHT_UNIT_MULTIPLIER ?
-                contentWidth / POOL_TABLE_OUTLINE_WIDTH_UNIT_MULTIPLIER :
-                contentHeight / POOL_TABLE_OUTLINE_HEIGHT_UNIT_MULTIPLIER;
-        return (float) poolTableUnit;
+        drawWhiteBall(canvas);
     }
 
     private void drawTableCushions(Canvas canvas) {
@@ -209,9 +212,7 @@ public class PoolTableView extends View {
         canvas.drawCircle((left + right) / 2, (float) (POOL_TABLE_LINE_BLACK_SPOT_RATIO * top + (1 - POOL_TABLE_LINE_BLACK_SPOT_RATIO) * bottom), rad, paint);
     }
 
-    private void drawWhiteBall(Canvas canvas, float x, float y) {
-        WhiteBall whiteBall = new WhiteBall(x, y, poolTableUnit);
-
+    private void drawWhiteBall(Canvas canvas) {
         canvas.drawCircle(whiteBall.getX(), whiteBall.getY(), whiteBall.getRad(), whiteBall.getPaint());
     }
 }
