@@ -8,9 +8,11 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.View;
 
 import com.drewmiley.eraserhead.R;
+import com.drewmiley.eraserhead.gesture.DoubleTapListener;
 import com.drewmiley.eraserhead.item.WhiteBall;
 
 public class PoolTableView extends View {
@@ -29,26 +31,30 @@ public class PoolTableView extends View {
     private int lineColor;
     private int pocketColor;
 
+    private GestureDetector doubleTapDetector;
+
     private double contentHeight;
     private double contentWidth;
     private float poolTableUnit;
 
     public PoolTableView(Context context) {
         super(context);
-        init(null, 0);
+        init(context, null, 0);
     }
 
     public PoolTableView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init(context, attrs, 0);
     }
 
     public PoolTableView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(attrs, defStyle);
+        init(context, attrs, defStyle);
     }
 
-    private void init(AttributeSet attrs, int defStyle) {
+    private void init(Context context, AttributeSet attrs, int defStyle) {
+        doubleTapDetector = new GestureDetector(context, new DoubleTapListener());
+
         // Load attributes
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.PoolTableView, defStyle, 0);
