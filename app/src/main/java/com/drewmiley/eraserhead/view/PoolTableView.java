@@ -3,12 +3,10 @@ package com.drewmiley.eraserhead.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.drewmiley.eraserhead.R;
@@ -73,6 +71,45 @@ public class PoolTableView extends View {
                 pocketColor);
 
         a.recycle();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        int action = motionEvent.getAction();
+        if (action == MotionEvent.ACTION_DOWN){
+            onTouch(motionEvent.getX(), motionEvent.getY());
+        }
+        if (action == MotionEvent.ACTION_MOVE) {
+            onDrag(motionEvent.getX(), motionEvent.getY());
+        }
+
+        // Whether this event represents a double-tap
+        boolean doubleTapped = doubleTapDetector.onTouchEvent(motionEvent);
+
+        // If the cell is double tapped raise the event
+        if(doubleTapped) {
+            onDoubleTap(motionEvent.getX(), motionEvent.getY());
+        }
+
+        return true;
+    }
+
+    private void onTouch(float x, float y) {
+        System.out.println("Touch");
+        System.out.println(x);
+        System.out.println(y);
+    }
+
+    private void onDrag(float x, float y) {
+        System.out.println("Drag");
+        System.out.println(x);
+        System.out.println(y);
+    }
+
+    private void onDoubleTap(float x, float y) {
+        System.out.println("DoubleTap");
+        System.out.println(x);
+        System.out.println(y);
     }
 
     @Override
