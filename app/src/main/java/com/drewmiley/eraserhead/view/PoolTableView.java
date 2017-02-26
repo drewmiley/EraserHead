@@ -11,15 +11,16 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.drewmiley.eraserhead.R;
+import com.drewmiley.eraserhead.item.WhiteBall;
 
 public class PoolTableView extends View {
 
     private final double POOL_TABLE_OUTLINE_HEIGHT_UNIT_MULTIPLIER = 7;
     private final double POOL_TABLE_OUTLINE_WIDTH_UNIT_MULTIPLIER = 4;
-    private final double POOL_TABLE_BAIZE_HEIGHT_UNIT_MULTIPLIER = 6;
-    private final double POOL_TABLE_BAIZE_WIDTH_UNIT_MULTIPLIER = 3;
-    private final double POOL_TABLE_POCKET_RADIUS_UNIT_MULTIPLIER = 0.2;
-    private final double POOL_TABLE_LINE_RADIUS_UNIT_MULTIPIER = 0.05;
+    private final double POOL_TABLE_BAIZE_HEIGHT_UNIT_MULTIPLIER = 6.2;
+    private final double POOL_TABLE_BAIZE_WIDTH_UNIT_MULTIPLIER = 3.2;
+    private final double POOL_TABLE_POCKET_RADIUS_UNIT_MULTIPLIER = 0.12;
+    private final double POOL_TABLE_LINE_RADIUS_UNIT_MULTIPIER = 0.02;
     private final double POOL_TABLE_LINE_BAULK_LINE_RATIO = 0.2;
     private final double POOL_TABLE_LINE_BLACK_SPOT_RATIO = 0.2;
 
@@ -80,6 +81,8 @@ public class PoolTableView extends View {
         drawTableBaize(canvas);
         drawTablePockets(canvas);
         drawTableLines(canvas);
+
+        drawWhiteBall(canvas, (float) contentWidth / 2, (float) contentHeight / 2);
     }
 
     private float calculatePoolTableUnit() {
@@ -161,5 +164,11 @@ public class PoolTableView extends View {
                 (float) ((1 - POOL_TABLE_LINE_BAULK_LINE_RATIO) * top + POOL_TABLE_LINE_BAULK_LINE_RATIO * bottom + rad / 2),
                 paint);
         canvas.drawCircle((left + right) / 2, (float) (POOL_TABLE_LINE_BLACK_SPOT_RATIO * top + (1 - POOL_TABLE_LINE_BLACK_SPOT_RATIO) * bottom), rad, paint);
+    }
+
+    private void drawWhiteBall(Canvas canvas, float x, float y) {
+        WhiteBall whiteBall = new WhiteBall(x, y, poolTableUnit);
+
+        canvas.drawCircle(whiteBall.getX(), whiteBall.getY(), whiteBall.getRad(), whiteBall.getPaint());
     }
 }
