@@ -101,16 +101,7 @@ public class PoolTableView extends View {
     }
 
     private void onTouch(float x, float y) {
-        invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
-                Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
-                Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
-                Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
-        whiteBall.setX(x);
-        whiteBall.setY(y);
-        invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
-                Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
-                Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
-                Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
+
     }
 
     private void onDrag(float x, float y) {
@@ -131,8 +122,8 @@ public class PoolTableView extends View {
                 Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
                 Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
                 Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
-        whiteBall.setX(x + 50);
-        whiteBall.setY(y + 50);
+        whiteBall.setX(x);
+        whiteBall.setY(y);
         invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
                 Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
                 Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
