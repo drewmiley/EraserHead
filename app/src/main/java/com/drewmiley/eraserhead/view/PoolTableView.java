@@ -17,9 +17,9 @@ public class PoolTableView extends View {
 
     private final double POOL_TABLE_OUTLINE_HEIGHT_UNIT_MULTIPLIER = 7;
     private final double POOL_TABLE_OUTLINE_WIDTH_UNIT_MULTIPLIER = 4;
-    private final double POOL_TABLE_BAIZE_HEIGHT_UNIT_MULTIPLIER = 6.2;
-    private final double POOL_TABLE_BAIZE_WIDTH_UNIT_MULTIPLIER = 3.2;
-    private final double POOL_TABLE_POCKET_RADIUS_UNIT_MULTIPLIER = 0.12;
+    private final double POOL_TABLE_BAIZE_HEIGHT_UNIT_MULTIPLIER = 6.5;
+    private final double POOL_TABLE_BAIZE_WIDTH_UNIT_MULTIPLIER = 3.5;
+    private final double POOL_TABLE_POCKET_RADIUS_UNIT_MULTIPLIER = 0.16;
     private final double POOL_TABLE_LINE_RADIUS_UNIT_MULTIPIER = 0.02;
     private final double POOL_TABLE_LINE_BAULK_LINE_RATIO = 0.2;
     private final double POOL_TABLE_LINE_BLACK_SPOT_RATIO = 0.2;
