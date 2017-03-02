@@ -35,6 +35,11 @@ public class PoolTableView extends View {
     private double contentWidth;
     private float poolTableUnit;
 
+    private float baizeLeft;
+    private float baizeTop;
+    private float baizeRight;
+    private float baizeBottom;
+
     private WhiteBall whiteBall;
 
     public PoolTableView(Context context) {
@@ -101,33 +106,44 @@ public class PoolTableView extends View {
     }
 
     private void onTouch(float x, float y) {
-
+        if (inBaize(x, y)) {
+            invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
+                    Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
+                    Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
+                    Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
+            whiteBall.setX(x);
+            whiteBall.setY(y);
+            invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
+                    Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
+                    Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
+                    Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
+        }
     }
 
     private void onDrag(float x, float y) {
-        invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
-                Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
-                Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
-                Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
-        whiteBall.setX(x);
-        whiteBall.setY(y);
-        invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
-                Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
-                Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
-                Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
+        if (inBaize(x, y)) {
+            invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
+                    Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
+                    Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
+                    Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
+            whiteBall.setX(x);
+            whiteBall.setY(y);
+            invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
+                    Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
+                    Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
+                    Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
+        }
     }
 
     private void onDoubleTap(float x, float y) {
-        invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
-                Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
-                Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
-                Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
-        whiteBall.setX(x);
-        whiteBall.setY(y);
-        invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
-                Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
-                Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
-                Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
+        if (!inBaize(x, y)) {
+            System.out.println("Run Shot");
+        }
+    }
+
+    private boolean inBaize(float x, float y) {
+        return x > baizeLeft && x < baizeRight &&
+                y > baizeTop && y < baizeBottom;
     }
 
     @Override
@@ -172,12 +188,12 @@ public class PoolTableView extends View {
         Paint paint = new Paint();
         paint.setColor(baizeColor);
 
-        float left = (float) (contentWidth - poolTableBaizeWidth) / 2;
-        float top = (float) (contentHeight - poolTableBaizeHeight) / 2;
-        float right = (float) (contentWidth + poolTableBaizeWidth) / 2;
-        float bottom = (float) (contentHeight + poolTableBaizeHeight) / 2;
+        baizeLeft = (float) (contentWidth - poolTableBaizeWidth) / 2;
+        baizeTop = (float) (contentHeight - poolTableBaizeHeight) / 2;
+        baizeRight = (float) (contentWidth + poolTableBaizeWidth) / 2;
+        baizeBottom = (float) (contentHeight + poolTableBaizeHeight) / 2;
 
-        canvas.drawRect(left, top, right, bottom, paint);
+        canvas.drawRect(baizeLeft, baizeTop, baizeRight, baizeBottom, paint);
     }
 
     private void drawTablePockets(Canvas canvas) {
