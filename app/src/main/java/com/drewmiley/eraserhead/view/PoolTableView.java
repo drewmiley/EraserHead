@@ -142,8 +142,8 @@ public class PoolTableView extends View {
     }
 
     private boolean inBaize(float x, float y) {
-        return x > baizeLeft && x < baizeRight &&
-                y > baizeTop && y < baizeBottom;
+        return x > baizeLeft + whiteBall.getRad() && x < baizeRight - whiteBall.getRad() &&
+                y > baizeTop + whiteBall.getRad() && y < baizeBottom - whiteBall.getRad();
     }
 
     @Override
