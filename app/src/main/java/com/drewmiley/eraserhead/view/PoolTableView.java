@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.FloatProperty;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -122,16 +123,16 @@ public class PoolTableView extends View {
 
     private void onDrag(float x, float y) {
         if (inBaize(x, y)) {
-            invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
-                    Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
-                    Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
-                    Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
-            whiteBall.setX(x);
-            whiteBall.setY(y);
-            invalidate(Math.round(whiteBall.getX() - whiteBall.getRad()) - 1,
-                    Math.round(whiteBall.getY() - whiteBall.getRad()) - 1,
-                    Math.round(whiteBall.getX() + whiteBall.getRad()) + 1,
-                    Math.round(whiteBall.getY() + whiteBall.getRad()) + 1);
+            invalidate(Math.round(whiteBall.getDestX() - whiteBall.getRad()) - 1,
+                    Math.round(whiteBall.getDestY() - whiteBall.getRad()) - 1,
+                    Math.round(whiteBall.getDestX() + whiteBall.getRad()) + 1,
+                    Math.round(whiteBall.getDestY() + whiteBall.getRad()) + 1);
+            whiteBall.setDestX(x);
+            whiteBall.setDestY(y);
+            invalidate(Math.round(whiteBall.getDestX() - whiteBall.getRad()) - 1,
+                    Math.round(whiteBall.getDestY() - whiteBall.getRad()) - 1,
+                    Math.round(whiteBall.getDestX() + whiteBall.getRad()) + 1,
+                    Math.round(whiteBall.getDestY() + whiteBall.getRad()) + 1);
         }
     }
 
@@ -162,6 +163,8 @@ public class PoolTableView extends View {
         drawTableBaize(canvas);
         drawTablePockets(canvas);
         drawTableLines(canvas);
+
+        drawWhiteBallDest(canvas);
 
         drawWhiteBall(canvas);
     }
@@ -238,6 +241,14 @@ public class PoolTableView extends View {
                 (float) ((1 - POOL_TABLE_LINE_BAULK_LINE_RATIO) * top + POOL_TABLE_LINE_BAULK_LINE_RATIO * bottom + rad / 2),
                 paint);
         canvas.drawCircle((left + right) / 2, (float) (POOL_TABLE_LINE_BLACK_SPOT_RATIO * top + (1 - POOL_TABLE_LINE_BLACK_SPOT_RATIO) * bottom), rad, paint);
+    }
+
+    private void drawWhiteBallDest(Canvas canvas) {
+        canvas.drawCircle(whiteBall.getDestX(), whiteBall.getDestY(), whiteBall.getRad(), whiteBall.getPaint());
+
+        Paint paint = new Paint();
+        paint.setColor(baizeColor);
+        canvas.drawCircle(whiteBall.getDestX(), whiteBall.getDestY(), (float) 0.8 * whiteBall.getRad(), paint);
     }
 
     private void drawWhiteBall(Canvas canvas) {

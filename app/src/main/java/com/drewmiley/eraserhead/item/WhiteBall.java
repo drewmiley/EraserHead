@@ -12,6 +12,8 @@ public class WhiteBall {
     private float x;
     private float y;
     private float rad;
+    private float destX;
+    private float destY;
 
     public WhiteBall(float x, float y, float poolTableUnit) {
         setX(x);
@@ -20,6 +22,9 @@ public class WhiteBall {
         Paint paint = new Paint();
         paint.setColor(color);
         this.paint = paint;
+
+        setDestX(x);
+        setDestY(y);
     }
 
     public Paint getPaint() {
@@ -44,5 +49,21 @@ public class WhiteBall {
 
     public float getRad() {
         return rad;
+    }
+
+    public float getDestX() {
+        return destX;
+    }
+
+    public void setDestX(float destX) {
+        this.destX = destX;
+    }
+
+    public float getDestY() {
+        return destY;
+    }
+
+    public void setDestY(float destY) {
+        this.destY = destY;
     }
 }
