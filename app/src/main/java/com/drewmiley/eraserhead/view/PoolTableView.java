@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.FloatProperty;
 import android.view.GestureDetector;
@@ -24,6 +25,8 @@ public class PoolTableView extends View {
     private final double POOL_TABLE_LINE_RADIUS_UNIT_MULTIPIER = 0.02;
     private final double POOL_TABLE_LINE_BAULK_LINE_RATIO = 0.2;
     private final double POOL_TABLE_LINE_BLACK_SPOT_RATIO = 0.2;
+
+    private final int ANIMATION_FRAMES = 40;
 
     private int baizeColor;
     private int cushionColor;
@@ -138,7 +141,23 @@ public class PoolTableView extends View {
 
     private void onDoubleTap(float x, float y) {
         if (!inBaize(x, y)) {
-            System.out.println("Run Shot");
+            float initX = whiteBall.getX();
+            float initY = whiteBall.getY();
+            float deltaX = (whiteBall.getDestX() - initX) / ANIMATION_FRAMES;
+            float deltaY = (whiteBall.getDestY() - initY) / ANIMATION_FRAMES;
+            for (int i = 1; i <= ANIMATION_FRAMES; i++) {
+                final float newX = initX + i * deltaX;
+                final float newY = initY + i * deltaY;
+                Runnable r = new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("dgdfgd");
+                        onTouch(newX, newY);
+                    }
+                };
+                Handler h = new Handler();
+                h.postDelayed(r, i * 1000 / ANIMATION_FRAMES);
+            }
         }
     }
 
